@@ -572,50 +572,44 @@ namespace Microsoft.Hadoop.Avro.Tests
 
         [TestMethod]
         [TestCategory("CheckIn")]
-        [ExpectedException(typeof(ArgumentNullException))]
         public void Encoder_NullByteArray()
         {
-            this.Encoder.Encode((byte[])null);
+            Assert.ThrowsException<ArgumentNullException>(() => this.Encoder.Encode((byte[])null));
         }
 
         [TestMethod]
         [TestCategory("CheckIn")]
-        [ExpectedException(typeof(ArgumentNullException))]
         public void Encode_NullStream()
         {
-            this.Encoder.Encode((Stream)null);
+            Assert.ThrowsException<ArgumentNullException>(() => this.Encoder.Encode((Stream)null));
         }
 
         [TestMethod]
         [TestCategory("CheckIn")]
-        [ExpectedException(typeof(ArgumentNullException))]
         public void Encode_NullFixed()
         {
-            this.Encoder.EncodeFixed(null);
+            Assert.ThrowsException<ArgumentNullException>(() => this.Encoder.EncodeFixed(null));
         }
 
         [TestMethod]
         [TestCategory("CheckIn")]
-        [ExpectedException(typeof(ArgumentOutOfRangeException))]
         public void Decode_FixedWithNegativeSize()
         {
-            this.Decoder.DecodeFixed(-1);
+            Assert.ThrowsException<ArgumentOutOfRangeException>(() => this.Decoder.DecodeFixed(-1));
         }
 
         [TestMethod]
         [TestCategory("CheckIn")]
-        [ExpectedException(typeof(Exception), AllowDerivedTypes = true)]
         public void Skip_FixedWithNegativeSize()
         {
-            this.Decoder.SkipFixed(-1);
+            Assert.ThrowsException<Exception>(() => this.Decoder.SkipFixed(-1));
         }
 
         [TestMethod]
         [TestCategory("CheckIn")]
-        [ExpectedException(typeof(ArgumentNullException))]
         public void Encode_NullString()
         {
-            this.Encoder.Encode((string)null);
+            Assert.ThrowsException<ArgumentNullException>(() => this.Encoder.Encode((string)null));
         }
 
         [TestMethod]

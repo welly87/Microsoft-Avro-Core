@@ -131,15 +131,13 @@ namespace Microsoft.Hadoop.Avro.Tests
 
         [TestMethod]
         [TestCategory("CheckIn")]
-        [ExpectedException(typeof(SerializationException))]
         public void BufferedDecode_InvalidBool_UnexpectedStreamEnd()
         {
-            this.Decoder.DecodeBool();
+            Assert.ThrowsException<SerializationException>(() => this.Decoder.DecodeBool());
         }
 
         [TestMethod]
         [TestCategory("CheckIn")]
-        [ExpectedException(typeof(SerializationException))]
         public void BufferedDecode_InvalidDouble_UnexpectedStreamEnd()
         {
             var numberOfBytes = Utilities.GetRandom<int>(false) % 8;
@@ -148,12 +146,13 @@ namespace Microsoft.Hadoop.Avro.Tests
                 this.Stream.WriteByte(0xFF);
             }
             this.Stream.Seek(0, SeekOrigin.Begin);
-            this.Decoder.DecodeDouble();
+
+
+            Assert.ThrowsException<SerializationException>(() => this.Decoder.DecodeDouble());
         }
 
         [TestMethod]
         [TestCategory("CheckIn")]
-        [ExpectedException(typeof(SerializationException))]
         public void BufferedDecode_InvalidFloat_UnexpectedStreamEnd()
         {
             var numberOfBytes = Utilities.GetRandom<int>(false) % 4;
@@ -162,17 +161,16 @@ namespace Microsoft.Hadoop.Avro.Tests
                 this.Stream.WriteByte(0xFF);
             }
             this.Stream.Seek(0, SeekOrigin.Begin);
-            this.Decoder.DecodeFloat();
+            Assert.ThrowsException<SerializationException>(() => this.Decoder.DecodeFloat());
         }
 
         [TestMethod]
         [TestCategory("CheckIn")]
-        [ExpectedException(typeof(SerializationException))]
         public void BufferedDecode_InvalidFixed_UnexpectedStreamEnd()
         {
             var randomByteArray = Utilities.GetRandom<byte[]>(false);
             this.Stream.Write(randomByteArray, 0, randomByteArray.Length - 1);
-            this.Decoder.DecodeFixed(randomByteArray.Length);
+            Assert.ThrowsException<SerializationException>(() => this.Decoder.DecodeFixed(randomByteArray.Length));
         }
 
         [TestMethod]
@@ -189,7 +187,7 @@ namespace Microsoft.Hadoop.Avro.Tests
             using (var memoryStream = new MemoryStream(buffer))
             {
                 var decoder = new BufferedBinaryDecoder(memoryStream);
-                decoder.DecodeByteArray();
+                Assert.ThrowsException<SerializationException>(() => decoder.DecodeByteArray());
             }
         }
         #endregion
