@@ -24,11 +24,13 @@ namespace Microsoft.Hadoop.Avro.Tests
     {
         [TestMethod]
         [TestCategory("CheckIn")]
-        [ExpectedException(typeof(ArgumentNullException))]
         public void Resolver_GetSerializationInfoUsingDataContactResolverWithNullFieldInfo()
         {
-            var resolver = new AvroDataContractResolver();
-            resolver.ResolveMembers(null);
+            Assert.ThrowsException<SerializationException>(() =>
+            {
+                var resolver = new AvroDataContractResolver();
+                resolver.ResolveMembers(null);
+            });
         }
 
         [TestMethod]

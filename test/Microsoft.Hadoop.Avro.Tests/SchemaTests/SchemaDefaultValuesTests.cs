@@ -163,18 +163,19 @@ namespace Microsoft.Hadoop.Avro.Tests
 
         [TestMethod]
         [TestCategory("CheckIn")]
-        [ExpectedException(typeof(SerializationException))]
         public void SchemaDefaultValues_ArrayWithWrongValues()
         {
             const string DefaultSchema = @"{""type"":""array"",""items"":""int""}";
             var defaultValue = new object[] { 1, 2, 3, 4 };
             const string DefaultValueJson = "[1.1, 2.1, 3.1, 4.1]";
-
-            RoundTripSerializationWithDefaultsAndCheck(
+            Assert.ThrowsException<SerializationException>(() =>
+            {
+                RoundTripSerializationWithDefaultsAndCheck(
                 DefaultSchema,
                 defaultValue,
                 DefaultValueJson,
                 (expected, actual) => Assert.IsTrue(((object[])expected).SequenceEqual((object[])actual)));
+            });
         }
 
         [TestMethod]
@@ -232,71 +233,79 @@ namespace Microsoft.Hadoop.Avro.Tests
 
         [TestMethod]
         [TestCategory("CheckIn")]
-        [ExpectedException(typeof(SerializationException))]
         public void SchemaDefaultValues_WrongBool()
         {
-            RoundTripSerializationWithDefaultsAndCheck(@"""boolean""", true, "0");
+            Assert.ThrowsException<SerializationException>(() =>
+            {
+                RoundTripSerializationWithDefaultsAndCheck(@"""boolean""", true, "0");
+            });
         }
 
         [TestMethod]
         [TestCategory("CheckIn")]
-        [ExpectedException(typeof(SerializationException))]
         public void SchemaDefaultValues_UnicodeCodePointLargerThan255()
         {
             const string DefaultSchema = @"""bytes""";
             var defaultValue = new byte[] { 0x00, 0x01, 0x02 };
             const string DefaultValueJson = @"""\u0100\u0101\u0102""";
-
-            RoundTripSerializationWithDefaultsAndCheck(
+            Assert.ThrowsException<SerializationException>(() =>
+            {
+                RoundTripSerializationWithDefaultsAndCheck(
                 DefaultSchema,
                 defaultValue,
                 DefaultValueJson,
                 (expected, actual) => Assert.IsTrue(((byte[])expected).SequenceEqual((byte[])actual)));
+            });
         }
 
         [TestMethod]
         [TestCategory("CheckIn")]
-        [ExpectedException(typeof(SerializationException))]
         public void SchemaDefaultValues_EnumWithInvalidSymbol()
         {
             const string DefaultSchema = @"{ ""type"": ""enum"",""name"": ""Suit"",""symbols"" : [""SPADES"", ""HEARTS"", ""DIAMONDS"", ""CLUBS""]}";
             var tempSerializer = AvroSerializer.CreateGeneric(DefaultSchema);
             var defaultValue = new AvroEnum(tempSerializer.WriterSchema) { Value = "DIAMONDS" };
             const string DefaultValueJson = @"""SOMESYMBOL""";
-            RoundTripSerializationWithDefaultsAndCheck(
+
+            Assert.ThrowsException<SerializationException>(() =>
+            {
+                RoundTripSerializationWithDefaultsAndCheck(
                 DefaultSchema,
                 defaultValue,
                 DefaultValueJson,
                 (expected, actual) => Assert.AreEqual(expected.Value, actual.Value));
+            });
         }
 
         [TestMethod]
         [TestCategory("CheckIn")]
-        [ExpectedException(typeof(SerializationException))]
         public void SchemaDefaultValues_FixedWithValueOfInvalidSize()
         {
             const string DefaultSchema = @"{""type"": ""fixed"", ""size"": ""16"", ""name"":""SomeName""}";
             var defaultValue = new byte[] { 0x00, 0x01, 0x02, 0x03 };
             const string DefaultValueJson = @"""\u0000\u0001\u0002\u0003\u0004""";
-
-            RoundTripSerializationWithDefaultsAndCheck(
+            Assert.ThrowsException<SerializationException>(() =>
+            {
+                RoundTripSerializationWithDefaultsAndCheck(
                 DefaultSchema,
                 defaultValue,
                 DefaultValueJson,
                 (expected, actual) => Assert.IsTrue(((byte[])expected).SequenceEqual((byte[])actual)));
+            });
         }
 
         [TestMethod]
         [TestCategory("CheckIn")]
-        [ExpectedException(typeof(SerializationException))]
         public void SchemaDefaultValues_NullWithWrongNullValue()
         {
-            RoundTripSerializationWithDefaultsAndCheck<string>(@"[""null"", ""string""]", null, "0");
+            Assert.ThrowsException<SerializationException>(() =>
+            {
+                RoundTripSerializationWithDefaultsAndCheck<string>(@"[""null"", ""string""]", null, "0");
+            });
         }
 
         [TestMethod]
         [TestCategory("CheckIn")]
-        [ExpectedException(typeof(SerializationException))]
         public void SchemaDefaultValues_RecordWithInvalidFields()
         {
             const string DefaultSchema =
@@ -307,7 +316,9 @@ namespace Microsoft.Hadoop.Avro.Tests
             defaultValue.Field2 = "some string " + Utilities.GetRandom<int>(false);
             var defaultValueJson = @"{""Field1"":" + defaultValue.Field1 + @", ""Field2"":""" + defaultValue.Field2 +
                                        @""", ""WRONGFIELD"":""WRONGVALUE""}";
-            RoundTripSerializationWithDefaultsAndCheck<AvroRecord>(
+            Assert.ThrowsException<SerializationException>(() =>
+            {
+                RoundTripSerializationWithDefaultsAndCheck<AvroRecord>(
                 DefaultSchema,
                 defaultValue,
                 defaultValueJson,
@@ -316,6 +327,7 @@ namespace Microsoft.Hadoop.Avro.Tests
                     Assert.AreEqual(expected.Field1, actual.Field1);
                     Assert.AreEqual(expected.Field2, actual.Field2);
                 }));
+            });
         }
 
         [TestMethod]

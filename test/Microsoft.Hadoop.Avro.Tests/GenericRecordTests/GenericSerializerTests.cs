@@ -416,19 +416,21 @@ namespace Microsoft.Hadoop.Avro.Tests
 
             var serializer = AvroSerializer.CreateGeneric(WriterSchema);
             var deserializer = AvroSerializer.CreateGenericDeserializerOnly(WriterSchema, ReaderSchema);
-
-            using (var stream = new MemoryStream())
+            Assert.ThrowsException<Exception>(() =>
             {
-                dynamic expected = new AvroEnum(serializer.WriterSchema);
-                expected.IntegerValue = 0;
+                using (var stream = new MemoryStream())
+                {
+                    dynamic expected = new AvroEnum(serializer.WriterSchema);
+                    expected.IntegerValue = 0;
 
-                serializer.Serialize(stream, expected);
-                stream.Seek(0, SeekOrigin.Begin);
+                    serializer.Serialize(stream, expected);
+                    stream.Seek(0, SeekOrigin.Begin);
 
-                dynamic actual = deserializer.Deserialize(stream);
-                Assert.AreEqual(expected.IntegerValue, actual.IntegerValue);
-                Assert.AreEqual(expected.Value, actual.Value);
-            }
+                    dynamic actual = deserializer.Deserialize(stream);
+                    Assert.AreEqual(expected.IntegerValue, actual.IntegerValue);
+                    Assert.AreEqual(expected.Value, actual.Value);
+                }
+            });
         }
 
         [TestMethod]
