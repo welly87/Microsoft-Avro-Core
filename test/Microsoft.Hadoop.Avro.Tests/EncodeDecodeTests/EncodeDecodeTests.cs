@@ -119,7 +119,6 @@ namespace Microsoft.Hadoop.Avro.Tests
 
         [TestMethod]
         [TestCategory("CheckIn")]
-        [ExpectedException(typeof(SerializationException))]
         public void Decode_InvalidInt()
         {
             this.Stream.WriteByte(0xFF);
@@ -131,7 +130,7 @@ namespace Microsoft.Hadoop.Avro.Tests
             this.Stream.WriteByte(0x1);
             this.Stream.Flush();
             this.Stream.Seek(0, SeekOrigin.Begin);
-            var result = this.Decoder.DecodeInt();
+            Assert.ThrowsException<SerializationException>(() => { var result = this.Decoder.DecodeInt(); });
         }
 
         [TestMethod]
@@ -206,7 +205,6 @@ namespace Microsoft.Hadoop.Avro.Tests
 
         [TestMethod]
         [TestCategory("CheckIn")]
-        [ExpectedException(typeof(SerializationException))]
         public void Decode_InvalidLong()
         {
             this.Stream.WriteByte(0xFF);
@@ -223,16 +221,15 @@ namespace Microsoft.Hadoop.Avro.Tests
             this.Stream.WriteByte(0x1);
             this.Stream.Flush();
             this.Stream.Seek(0, SeekOrigin.Begin);
-            var result = this.Decoder.DecodeLong();
+            Assert.ThrowsException<SerializationException>(() => { var result = this.Decoder.DecodeLong(); });
         }
 
         [TestMethod]
         [TestCategory("CheckIn")]
-        [ExpectedException(typeof(Exception), AllowDerivedTypes = true)]
         public void Decode_InvalidLongWithEmptyStream()
         {
             this.Stream.Position = 0;
-            this.Decoder.DecodeLong();
+            Assert.ThrowsException<SerializationException>(() => this.Decoder.DecodeLong());
         }
 
         [TestMethod]

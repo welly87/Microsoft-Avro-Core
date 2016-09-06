@@ -25,38 +25,34 @@ namespace Microsoft.Hadoop.Avro.Tests
     {
         [TestMethod]
         [TestCategory("CheckIn")]
-        [ExpectedException(typeof(ArgumentNullException))]
         public void DeflateCodec_GetCompressedStreamFromNull()
         {
             var codec = new DeflateCodec();
-            codec.GetCompressedStreamOver(null);
+            Assert.ThrowsException<ArgumentNullException>(() => codec.GetCompressedStreamOver(null));
         }
 
         [TestMethod]
         [TestCategory("CheckIn")]
-        [ExpectedException(typeof(ArgumentNullException))]
         public void DeflateCodec_GetDecompressedStreamOver()
         {
             var codec = new DeflateCodec();
-            codec.GetDecompressedStreamOver(null);
+            Assert.ThrowsException<ArgumentNullException>(() => codec.GetDecompressedStreamOver(null));
         }
 
         [TestMethod]
         [TestCategory("CheckIn")]
-        [ExpectedException(typeof(ArgumentNullException))]
         public void NullCodec_GetCompressedStreamFromNull()
         {
             var codec = new NullCodec();
-            codec.GetCompressedStreamOver(null);
+            Assert.ThrowsException<ArgumentNullException>(() => codec.GetCompressedStreamOver(null));
         }
 
         [TestMethod]
         [TestCategory("CheckIn")]
-        [ExpectedException(typeof(ArgumentNullException))]
         public void NullCodec_GetDecompressedStreamOver()
         {
             var codec = new NullCodec();
-            codec.GetDecompressedStreamOver(null);
+            Assert.ThrowsException<ArgumentNullException>(() => codec.GetDecompressedStreamOver(null));
         }
 
         [TestMethod]

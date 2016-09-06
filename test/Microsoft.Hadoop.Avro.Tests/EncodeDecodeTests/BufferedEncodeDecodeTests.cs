@@ -113,7 +113,6 @@ namespace Microsoft.Hadoop.Avro.Tests
 
         [TestMethod]
         [TestCategory("CheckIn")]
-        [ExpectedException(typeof(SerializationException))]
         public void BufferedDecode_InvalidString_UnexpectedStreamEnd()
         {
             var randomString = Utilities.GetRandom<string>(false);
@@ -125,7 +124,7 @@ namespace Microsoft.Hadoop.Avro.Tests
             using (var memoryStream = new MemoryStream(buffer))
             {
                 var decoder = new BufferedBinaryDecoder(memoryStream);
-                decoder.DecodeString();
+                Assert.ThrowsException<SerializationException>(() => decoder.DecodeString());
             }
         }
 
@@ -265,7 +264,6 @@ namespace Microsoft.Hadoop.Avro.Tests
 
         [TestMethod]
         [TestCategory("CheckIn")]
-        [ExpectedException(typeof(SerializationException))]
         public void BufferedSkip_InvalidString_UnexpectedStreamEnd()
         {
             var randomString = Utilities.GetRandom<string>(false);
@@ -277,21 +275,19 @@ namespace Microsoft.Hadoop.Avro.Tests
             using (var memoryStream = new MemoryStream(buffer))
             {
                 var decoder = new BufferedBinaryDecoder(memoryStream);
-                decoder.SkipString();
+                Assert.ThrowsException<SerializationException>(() => decoder.SkipString());
             }
         }
 
         [TestMethod]
         [TestCategory("CheckIn")]
-        [ExpectedException(typeof(SerializationException))]
         public void BufferedSkip_InvalidBool_UnexpectedStreamEnd()
         {
-            this.Decoder.SkipBool();
+            Assert.ThrowsException<SerializationException>(() => this.Decoder.SkipBool());
         }
 
         [TestMethod]
         [TestCategory("CheckIn")]
-        [ExpectedException(typeof(SerializationException))]
         public void BufferedSkip_InvalidDouble_UnexpectedStreamEnd()
         {
             var numberOfBytes = Utilities.GetRandom<int>(false) % 8;
@@ -300,12 +296,11 @@ namespace Microsoft.Hadoop.Avro.Tests
                 this.Stream.WriteByte(0xFF);
             }
             this.Stream.Seek(0, SeekOrigin.Begin);
-            this.Decoder.SkipDouble();
+            Assert.ThrowsException<SerializationException>(() => this.Decoder.SkipDouble());
         }
 
         [TestMethod]
         [TestCategory("CheckIn")]
-        [ExpectedException(typeof(SerializationException))]
         public void BufferedSkip_InvalidFloat_UnexpectedStreamEnd()
         {
             var numberOfBytes = Utilities.GetRandom<int>(false) % 4;
@@ -314,22 +309,20 @@ namespace Microsoft.Hadoop.Avro.Tests
                 this.Stream.WriteByte(0xFF);
             }
             this.Stream.Seek(0, SeekOrigin.Begin);
-            this.Decoder.SkipFloat();
+            Assert.ThrowsException<SerializationException>(() => this.Decoder.SkipFloat());
         }
 
         [TestMethod]
         [TestCategory("CheckIn")]
-        [ExpectedException(typeof(SerializationException))]
         public void BufferedSkip_InvalidFixed_UnexpectedStreamEnd()
         {
             var randomByteArray = Utilities.GetRandom<byte[]>(false);
             this.Stream.Write(randomByteArray, 0, randomByteArray.Length - 1);
-            this.Decoder.SkipFixed(randomByteArray.Length);
+            Assert.ThrowsException<SerializationException>(() => this.Decoder.SkipFixed(randomByteArray.Length));
         }
 
         [TestMethod]
         [TestCategory("CheckIn")]
-        [ExpectedException(typeof(SerializationException))]
         public void BufferedSkip_InvalidByteArray_UnexpectedStreamEnd()
         {
             var randomByteArray = Utilities.GetRandom<byte[]>(false);
@@ -341,7 +334,7 @@ namespace Microsoft.Hadoop.Avro.Tests
             using (var memoryStream = new MemoryStream(buffer))
             {
                 var decoder = new BufferedBinaryDecoder(memoryStream);
-                decoder.SkipByteArray();
+                Assert.ThrowsException<SerializationException>(() => decoder.SkipByteArray());
             }
         }
 

@@ -220,11 +220,10 @@ namespace Microsoft.Hadoop.Avro.Tests
 
         [TestMethod]
         [TestCategory("CheckIn")]
-        [ExpectedException(typeof(SerializationException))]
         public void Serializer_SerializeFixedWithWrongSize()
         {
             var obj = AvroFixedClass.Create(5);
-            RoundTripSerializationWithCheck(obj);
+            Assert.ThrowsException<SerializationException>(() => RoundTripSerializationWithCheck(obj));
         }
         #endregion
 
@@ -786,10 +785,9 @@ namespace Microsoft.Hadoop.Avro.Tests
 
         [TestMethod]
         [TestCategory("CheckIn")]
-        [ExpectedException(typeof(SerializationException))]
         public void Serializer_SerializeUnsupportedMembersUsingCustomResolver()
         {
-            var serializer = AvroSerializer.Create<ClassOfEvents>(new AvroSerializerSettings { Resolver = new DummyEventResolver() });
+            Assert.ThrowsException<ArgumentNullException>(() => { var serializer = AvroSerializer.Create<ClassOfEvents>(new AvroSerializerSettings { Resolver = new DummyEventResolver() }); });
         }
 
         #endregion //Resolvers tests
@@ -798,44 +796,39 @@ namespace Microsoft.Hadoop.Avro.Tests
 
         [TestMethod]
         [TestCategory("CheckIn")]
-        [ExpectedException(typeof(ArgumentNullException))]
         public void Serializer_SerializeToNullStream()
         {
             var expected = ClassOfInt.Create(true);
             var serializer = AvroSerializer.Create<ClassOfInt>();
-            serializer.Serialize((Stream)null, expected);
+            Assert.ThrowsException<ArgumentNullException>(() => serializer.Serialize((Stream)null, expected));
         }
 
         [TestMethod]
         [TestCategory("CheckIn")]
-        [ExpectedException(typeof(ArgumentNullException))]
         public void Serializer_DeserializeNullStream()
         {
             var serializer = AvroSerializer.Create<ClassOfInt>();
-            serializer.Deserialize((Stream)null);
+            Assert.ThrowsException<ArgumentNullException>(() => serializer.Deserialize((Stream)null));
         }
 
         [TestMethod]
         [TestCategory("CheckIn")]
-        [ExpectedException(typeof(ArgumentNullException))]
         public void Serializer_SerializeUsingNullEncoder()
         {
             var serializer = AvroSerializer.Create<int>();
-            serializer.Serialize((IEncoder)null, 0);
+            Assert.ThrowsException<ArgumentNullException>(() => serializer.Serialize((IEncoder)null, 0));
         }
 
         [TestMethod]
         [TestCategory("CheckIn")]
-        [ExpectedException(typeof(ArgumentNullException))]
         public void Serializer_DeserializeUsingNullDecoder()
         {
             var serializer = AvroSerializer.Create<int>();
-            serializer.Deserialize((IDecoder)null);
+            Assert.ThrowsException<ArgumentNullException>(() => serializer.Deserialize((IDecoder)null));
         }
 
         [TestMethod]
         [TestCategory("CheckIn")]
-        [ExpectedException(typeof(ArgumentNullException))]
         [SuppressMessage("Microsoft.Usage", "CA1806:DoNotIgnoreMethodResults",
             Justification = "This test only verifies whether the constructor will throw as expected.")]
         public void Serializer_CreationWithNullSettings()
@@ -846,11 +839,10 @@ namespace Microsoft.Hadoop.Avro.Tests
 
         [TestMethod]
         [TestCategory("CheckIn")]
-        [ExpectedException(typeof(SerializationException))]
         public void Serializer_SerializerNullObject()
         {
             var settings = new AvroSerializerSettings();
-            RoundTripSerializationWithCheck<ClassOfInt>(null, settings);
+            Assert.ThrowsException<SerializationException>(() => RoundTripSerializationWithCheck<ClassOfInt>(null, settings));
         }
 
         [TestMethod]
@@ -866,15 +858,13 @@ namespace Microsoft.Hadoop.Avro.Tests
 
         [TestMethod]
         [TestCategory("CheckIn")]
-        [ExpectedException(typeof(ArgumentNullException))]
         public void Serializer_CreateDeserializerOnlyWithNullSchema()
         {
-            AvroSerializer.CreateDeserializerOnly<ClassOfInt>(null, new AvroSerializerSettings());
+            Assert.ThrowsException<ArgumentNullException>(() => AvroSerializer.CreateDeserializerOnly<ClassOfInt>(null, new AvroSerializerSettings()));
         }
 
         [TestMethod]
         [TestCategory("CheckIn")]
-        [ExpectedException(typeof(ArgumentNullException))]
         public void Serializer_CreateDeserializerOnlyWithNullSettings()
         {
             const string StringSchema = @"{
@@ -888,7 +878,7 @@ namespace Microsoft.Hadoop.Avro.Tests
                                            }
                                        ]
                           }";
-            AvroSerializer.CreateDeserializerOnly<ClassOfInt>(StringSchema, null);
+            Assert.ThrowsException<ArgumentNullException>(() => AvroSerializer.CreateDeserializerOnly<ClassOfInt>(StringSchema, null));
         }
 
         [SuppressMessage("Microsoft.Usage", "CA1806:DoNotIgnoreMethodResults", 
@@ -1009,10 +999,10 @@ namespace Microsoft.Hadoop.Avro.Tests
             };
 
             var settings = new AvroSerializerSettings { Surrogate = new Surrogate(), Resolver = new AvroDataContractResolver(true) };
-            RoundTripSerializationWithCheck(
+            Assert.ThrowsException<SerializationException>(() => RoundTripSerializationWithCheck(
                 expected,
                 actual => CollectionAssert.AreEqual(expected, actual),
-                settings);
+                settings));
         }
 
         #endregion //Surrogates tests
@@ -1117,30 +1107,27 @@ namespace Microsoft.Hadoop.Avro.Tests
 
         [TestMethod]
         [TestCategory("CheckIn")]
-        [ExpectedException(typeof(SerializationException))]
         public void Serializer_SerializeAbstractClassWithInvalidDataContractKnownTypes()
         {
-            AvroSerializer.Create<AbstractClassWithInvalidKnownTypes>();
+            Assert.ThrowsException<SerializationException>(() => AvroSerializer.Create<AbstractClassWithInvalidKnownTypes>());
         }
 
         [TestMethod]
         [TestCategory("CheckIn")]
-        [ExpectedException(typeof(SerializationException))]
         public void Serializer_SerializeAbstractClassWithInvalidKnownTypesInSettings()
         {
-            AvroSerializer.Create<AbstractClassWithInvalidKnownTypes>(new AvroSerializerSettings { KnownTypes = new HashSet<Type> { typeof(Rectangle), typeof(Square) } });
+            Assert.ThrowsException<SerializationException>(() => AvroSerializer.Create<AbstractClassWithInvalidKnownTypes>(new AvroSerializerSettings { KnownTypes = new HashSet<Type> { typeof(Rectangle), typeof(Square) } }));
         }
 
         [TestMethod]
         [TestCategory("CheckIn")]
-        [ExpectedException(typeof(SerializationException))]
         public void Serializer_SerializeInterfaceWithInvalidKnownTypesInSettings()
         {
             IInterface expected = ClassImplementingInterface.Create();
 
-            RoundTripSerializationWithCheck(
+            Assert.ThrowsException<SerializationException>(() => RoundTripSerializationWithCheck(
                 expected,
-                new AvroSerializerSettings { KnownTypes = new HashSet<Type> { typeof(Rectangle), typeof(Square) } });
+                new AvroSerializerSettings { KnownTypes = new HashSet<Type> { typeof(Rectangle), typeof(Square) } }));
         }
 
         [TestMethod]
@@ -1169,11 +1156,10 @@ namespace Microsoft.Hadoop.Avro.Tests
 
         [TestMethod]
         [TestCategory("CheckIn")]
-        [ExpectedException(typeof(SerializationException))]
         public void Serializer_GiveInterfaceInKnownTypes()
         {
             var settings = new AvroSerializerSettings { KnownTypes = new List<Type> { typeof(IInheritedInterface) } };
-            AvroSerializer.Create<IInterface>(settings);
+            Assert.ThrowsException<SerializationException>(() => AvroSerializer.Create<IInterface>(settings));
         }
 
         [TestMethod]
@@ -1359,7 +1345,7 @@ namespace Microsoft.Hadoop.Avro.Tests
         {
             var obj = ClassOfUnion.Create();
             obj.IntStringNullFieldInt = Utilities.GetRandom<float>(false);
-            RoundTripSerializationWithCheck(obj);
+            Assert.ThrowsException<SerializationException>(() => RoundTripSerializationWithCheck(obj));
         }
 
         [TestMethod]

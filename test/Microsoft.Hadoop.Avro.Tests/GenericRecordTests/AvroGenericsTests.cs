@@ -288,7 +288,6 @@ namespace Microsoft.Hadoop.Avro.Tests
 
         [TestMethod]
         [TestCategory("CheckIn")]
-        [ExpectedException(typeof(SerializationException))]
         public void GenericSerializer_UnionOfNullAndArrayWithInvalidArrayType()
         {
             const string Schema = @"[""null"", { ""type"" :""array"", ""items"":""int"" } ]";
@@ -298,13 +297,12 @@ namespace Microsoft.Hadoop.Avro.Tests
             var serializer = AvroSerializer.CreateGeneric(Schema);
             using (var memoryStream = new MemoryStream())
             {
-                serializer.Serialize(memoryStream, arrayOfDoubles);
+                Assert.ThrowsException<SerializationException>(() => serializer.Serialize(memoryStream, arrayOfDoubles));
             }
         }
 
         [TestMethod]
         [TestCategory("CheckIn")]
-        [ExpectedException(typeof(SerializationException))]
         public void GenericSerializer_UnionOfNullAndArrayWithInvalidType()
         {
             const string Schema = @"[""null"", { ""type"" :""array"", ""items"":""int"" } ]";
@@ -314,13 +312,12 @@ namespace Microsoft.Hadoop.Avro.Tests
             var serializer = AvroSerializer.CreateGeneric(Schema);
             using (var memoryStream = new MemoryStream())
             {
-                serializer.Serialize(memoryStream, dictionaryOfDoubles);
+                Assert.ThrowsException<SerializationException>(() => serializer.Serialize(memoryStream, dictionaryOfDoubles));
             }
         }
 
         [TestMethod]
         [TestCategory("CheckIn")]
-        [ExpectedException(typeof(SerializationException))]
         public void GenericSerializer_UnionOfNullAndMapWithInvalidMapValueType()
         {
             const string Schema = @"[""null"", { ""type"" :""map"", ""values"":""int"" } ]";
@@ -330,13 +327,12 @@ namespace Microsoft.Hadoop.Avro.Tests
             var serializer = AvroSerializer.CreateGeneric(Schema);
             using (var memoryStream = new MemoryStream())
             {
-                serializer.Serialize(memoryStream, dictionaryOfDoubles);
+                Assert.ThrowsException<SerializationException>(() => serializer.Serialize(memoryStream, dictionaryOfDoubles));
             }
         }
 
         [TestMethod]
         [TestCategory("CheckIn")]
-        [ExpectedException(typeof(SerializationException))]
         public void GenericSerializer_UnionOfNullAndMapWithInvalidType()
         {
             const string Schema = @"[""null"", { ""type"" :""map"", ""values"":""int"" } ]";
@@ -346,13 +342,12 @@ namespace Microsoft.Hadoop.Avro.Tests
             var serializer = AvroSerializer.CreateGeneric(Schema);
             using (var memoryStream = new MemoryStream())
             {
-                serializer.Serialize(memoryStream, arrayOfDoubles);
+                Assert.ThrowsException<SerializationException>(() => serializer.Serialize(memoryStream, arrayOfDoubles));
             }
         }
 
         [TestMethod]
         [TestCategory("CheckIn")]
-        [ExpectedException(typeof(SerializationException))]
         public void GenericSerializer_UnionOfNullAndEnumWithInvalidEnum()
         {
             const string Schema = @"
@@ -387,7 +382,7 @@ namespace Microsoft.Hadoop.Avro.Tests
 
             using (var memoryStream = new MemoryStream())
             {
-                serializer.Serialize(memoryStream, invalidEnum);
+                Assert.ThrowsException<SerializationException>(() => serializer.Serialize(memoryStream, invalidEnum));
             }
         }
 

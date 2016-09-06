@@ -433,7 +433,6 @@ namespace Microsoft.Hadoop.Avro.Tests
 
         [TestMethod]
         [TestCategory("CheckIn")]
-        [ExpectedException(typeof(RuntimeBinderException))]
         public void GenericSerializer_SerializeRecordWithUknownField()
         {
             const string StringSchema = @"{
@@ -451,7 +450,7 @@ namespace Microsoft.Hadoop.Avro.Tests
 
             var serializer = AvroSerializer.CreateGeneric(StringSchema);
             dynamic expected = new AvroRecord(serializer.WriterSchema);
-            expected.UknownField = 5;
+            Assert.ThrowsException<RuntimeBinderException>(() => expected.UknownField = 5);
         }
 
         [TestMethod]
@@ -512,15 +511,13 @@ namespace Microsoft.Hadoop.Avro.Tests
 
         [TestMethod]
         [TestCategory("CheckIn")]
-        [ExpectedException(typeof(ArgumentNullException))]
         public void GenericSerializer_CreateWithNullSchema()
         {
-            AvroSerializer.CreateGeneric(null);
+            Assert.ThrowsException<ArgumentNullException>(() => AvroSerializer.CreateGeneric(null));
         }
 
         [TestMethod]
         [TestCategory("CheckIn")]
-        [ExpectedException(typeof(ArgumentNullException))]
         public void GenericSerializer_CreateGenericDeserializerWithNullWriterSchema()
         {
             const string ReaderSchema = @"{
@@ -531,12 +528,11 @@ namespace Microsoft.Hadoop.Avro.Tests
                                            {""name"":""LongMap"", ""type"": [""null"", {""type"":""map"", ""values"":""long""}]},
                                        ]
                           }";
-            AvroSerializer.CreateGenericDeserializerOnly(null, ReaderSchema);
+            Assert.ThrowsException<ArgumentNullException>(() => AvroSerializer.CreateGenericDeserializerOnly(null, ReaderSchema));
         }
 
         [TestMethod]
         [TestCategory("CheckIn")]
-        [ExpectedException(typeof(ArgumentNullException))]
         public void GenericSerializer_CreateGenericDeserializerWithNullReaderSchema()
         {
             const string WriterSchema = @"{
@@ -547,7 +543,7 @@ namespace Microsoft.Hadoop.Avro.Tests
                                            {""name"":""LongMap"", ""type"": [""null"", {""type"":""map"", ""values"":""long""}]},
                                        ]
                           }";
-            AvroSerializer.CreateGenericDeserializerOnly(WriterSchema, null);
+            Assert.ThrowsException<ArgumentNullException>(() => AvroSerializer.CreateGenericDeserializerOnly(WriterSchema, null));
         }
 
         #endregion
