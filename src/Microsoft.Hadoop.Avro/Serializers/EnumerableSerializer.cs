@@ -78,14 +78,15 @@ namespace Microsoft.Hadoop.Avro.Serializers
                 },
                 Expression.Assign(bufferSize, Expression.Constant(1024)),
                 Expression.Assign(buffer, Expression.New(listType)),
-                Expression.Assign(counter, Expression.Constant(0)),
+                Expression.Assign(counter, ConstantZero),
                 Expression.Assign(enumerator, Expression.Call(value, getEnumerator)),
+                Expression.Assign(chunkCounter, ConstantZero),
                 Expression.Loop(
                     Expression.IfThenElse(
                         Expression.NotEqual(Expression.Call(enumerator, moveNext), Expression.Constant(false)),
                         Expression.Block(
                             Expression.Assign(item, Expression.Property(enumerator, "Current")),
-                            Expression.IfThenElse(
+                            Expression.IfThen(
                                 Expression.Equal(counter, Expression.Constant(1024)),
                                 Expression.Block(
                                     Expression.Call(encoder, encodeArrayChunk, new Expression[] { Expression.Constant(1024) }),
@@ -97,14 +98,15 @@ namespace Microsoft.Hadoop.Avro.Serializers
                                             this.Schema.ItemSchema.Serializer.BuildSerializer(encoder, Expression.Property(buffer, "Item", chunkCounter)),
                                             Expression.PreIncrementAssign(chunkCounter)),
                                             chunkBreak),
-                                    Expression.Call(buffer, clear)),
-                                Expression.Block(
-                                    Expression.Call(buffer, add, new Expression[] { item }),
-                                    Expression.PreIncrementAssign(counter)))),
+                                    Expression.Call(buffer, clear))),
+                            Expression.Block(
+                                Expression.Call(buffer, add, new Expression[] { item }),
+                                Expression.PreIncrementAssign(counter))),
                         Expression.Break(arrayBreak)),
                     arrayBreak),
                 Expression.Call(encoder, encodeArrayChunk, new Expression[] { Expression.Property(buffer, "Count") }),
-                Expression.Assign(counter, Expression.Constant(0)),
+                Expression.Assign(counter, ConstantZero),
+                Expression.Assign(chunkCounter, ConstantZero),
                 Expression.Loop(
                     Expression.Block(
                         Expression.IfThen(Expression.GreaterThanOrEqual(chunkCounter, Expression.Property(buffer, "Count")), Expression.Break(lastChunkBreak)),
@@ -112,7 +114,7 @@ namespace Microsoft.Hadoop.Avro.Serializers
                         Expression.PreIncrementAssign(chunkCounter)),
                     lastChunkBreak),
                 Expression.IfThen(
-                    Expression.NotEqual(Expression.Property(buffer, listType, "Count"), Expression.Constant(0)),
+                    Expression.NotEqual(Expression.Property(buffer, listType, "Count"), ConstantZero),
                     Expression.Call(encoder, encodeArrayChunk, new[] { ConstantZero })));
         }
 
