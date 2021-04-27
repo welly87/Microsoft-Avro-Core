@@ -62,8 +62,8 @@ namespace Microsoft.Hadoop.Avro.Serializers
             ParameterExpression resultParameter = Expression.Variable(this.Schema.RuntimeType, "result");
             ParameterExpression unionTypeParameter = Expression.Variable(typeof(int), "unionType");
             BinaryExpression assignUnionType = Expression.Assign(unionTypeParameter, Expression.Call(decoder, this.Decode<int>(), new Expression[] { }));
-
-            Expression elseBranch = Expression.Empty();
+            
+            Expression elseBranch = Expression.Assign(resultParameter, Expression.Convert(Expression.Constant(null), this.Schema.RuntimeType));
             ConditionalExpression conditions = null;
             for (int i = this.itemSchemas.Count - 1; i >= 0; i--)
             {
